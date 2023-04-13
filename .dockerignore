@@ -1,10 +1,10 @@
 # docker
 docker*
+Docker*
 
 .idea
 .git
 
 .env.*
 build.sh
-docker*
 Procfile

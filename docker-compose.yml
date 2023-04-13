@@ -2,19 +2,18 @@ version: '3'
 
 services:
   api:
-    build: .
-    container_name: egi_api
+    image: lbdev77/egi-api:0.01
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/home/egi/api
+      - .:/home/dev/egi-api
     ports:
       - "8000:8000"
     depends_on:
       - db
 
   db:
-    image: postgres:lts
-    container_name: egi_db
+    image: postgres:latest
+    container_name: egi-db
     tty: true
     env_file: .env
     environment:

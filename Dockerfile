@@ -1,17 +1,17 @@
-FROM python:3.11
+FROM python:3.8
 
-RUN useadd -ms /bin/bash dev
+RUN useradd -ms /bin/bash dev
 
 USER dev
 
-ENV PYTHONUNBUFEERED 1
+ENV PYTHONUNBUFFERED 1
 
-WORKDIR /home/egi/api
+WORKDIR /home/dev/egi-api
 
-ENV PATH $PATH:/home/egi/.local/bin
+ENV PATH $PATH:/home/dev/.local/bin
 
-COPY requirements.txt /home/egi/api
+COPY requirements.txt /home/dev/egi-api
 
 RUN pip install -r requirements.txt
 
-COPY . /home/egi/api
+COPY . /home/dev/egi-api
