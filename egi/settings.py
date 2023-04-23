@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'psycopg2',
     # APPs
-    'core',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -69,7 +69,7 @@ WSGI_APPLICATION = 'egi.wsgi.application'
 
 DATABASE_URL = config('DATABASE_URL')
 
-try:
+if DATABASE_URL:
     DATABASES = {
         'default': db_url.config(
             default=DATABASE_URL,
@@ -77,8 +77,16 @@ try:
             conn_health_checks=True,
         ),
     }
-except  Exception as e:
-    print(e)
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "OPTIONS": {
+                "service": "my_service",
+                "passfile": ".my_pgpass",
+            },
+        }
+    }
 
 
 # Password validation
@@ -121,3 +129,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
+}
