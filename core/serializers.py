@@ -1,54 +1,54 @@
 from rest_framework import serializers
-from .models import Event, Comment
+# from .models import Event, Comment
 
 
-class EventSerializer(serializers.Serializer):
-	class Meta:
-		model = Event
-		fields = '__all__'
-		read_only_fields = ['id']
+# class EventSerializer(serializers.ModelSerializer):
+# 	class Meta:
+# 		model = Event
+# 		fields = '__all__'
+# 		read_only_fields = ['id']
 
-	def create_event(self, validated_data):
-		return Event.objects.create(**validated_data)
+# 	def create_event(self, validated_data):
+# 		return Event.objects.create(**validated_data)
 	
-	def update(self, instance, validated_data):
-		instance.name = validated_data.get('name', instance.name)
-		instance.start = validated_data.get('start', instance.start)
-		instance.finish = validated_data.get('finish', instance.finish)
-		instance.category = validated_data.get('category', instance.category)
-		instance.description = validated_data.get('description', instance.description)
-		instance.ticket = validated_data.get('ticket', instance.ticket)
-		instance.price = validated_data.get('price', instance.price)
-		instance.star = validated_data.get('star', instance.star)
-		instance.capacity = validated_data.get('capacity', instance.capacity)
-		instance.photo_url = validated_data.get('photo_url', instance.photo_url)
-		instance.video_url = validated_data.get('video_url', instance.video_url)
-		instance.save()
-		return instance
+# 	def update(self, instance, validated_data):
+# 		instance.name = validated_data.get('name', instance.name)
+# 		instance.start = validated_data.get('start', instance.start)
+# 		instance.finish = validated_data.get('finish', instance.finish)
+# 		instance.category = validated_data.get('category', instance.category)
+# 		instance.description = validated_data.get('description', instance.description)
+# 		instance.ticket = validated_data.get('ticket', instance.ticket)
+# 		instance.price = validated_data.get('price', instance.price)
+# 		instance.star = validated_data.get('star', instance.star)
+# 		instance.capacity = validated_data.get('capacity', instance.capacity)
+# 		instance.photo_url = validated_data.get('photo_url', instance.photo_url)
+# 		instance.video_url = validated_data.get('video_url', instance.video_url)
+# 		instance.save()
+# 		return instance
 
-	def view_event(self):
-		return Events.objects.all()
+# 	def view_event(self):
+# 		return Events.objects.all()
 
-	# def validate(self, data):
-    #     if data['start'] > data['finish']:
-    #     	raise serializers.ValidationError("finish must occur after start")
-    #     return data
+# 	def validate(self, data):
+#         if data['start'] > data['finish']:
+#         	raise serializers.ValidationError("finish must occur after start")
+#         return data
 
 
-class CommentSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    content = serializers.CharField(max_length=200)
-    created = serializers.DateTimeField()
+# class CommentSerializer(serializers.Serializer):
+#     email = serializers.EmailField()
+#     content = serializers.CharField(max_length=200)
+#     created = serializers.DateTimeField()
 
-    def create(self, validated_data):
-        return Comment.objects.create(**validated_data)
+#     def create(self, validated_data):
+#         return Comment.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.content = validated_data.get('content', instance.content)
-        instance.created = validated_data.get('created', instance.created)
-        instance.save()
-        return instance
+#     def update(self, instance, validated_data):
+#         instance.email = validated_data.get('email', instance.email)
+#         instance.content = validated_data.get('content', instance.content)
+#         instance.created = validated_data.get('created', instance.created)
+#         instance.save()
+#         return instance
 
 
 # class UserSerializer(serializers.ModelSerializer):
