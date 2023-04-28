@@ -1,10 +1,9 @@
-from django.shortcuts import render
-
-# from rest_framework import APIView
-# from rest_framework.response import Response
-
-# from .models import Event
-# from .serializers import EventSerializer
+from .models import Event
+from .serializers import EventSerializer
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 
 # class Overview(APIView):
@@ -18,38 +17,55 @@ from django.shortcuts import render
 # 		return Response(overview)
 
 
-# class Event(APIView):
-# 	def get(self, request):
-# 		try:
-# 			events = Event.objects.all()
-# 			serializer = EventSerializer(Event, many=True)
-# 			return Response(serializer.data)
-# 		except Exception as err:
-# 			return Response(f'Has not content: {err}')
+class Event(APIView):
+	def get(self, request, format=None):
+		events = Event.objects.all()
+		serializer = EventSerializer(events, many=True)
+		return Response(serializer.data)
 
-# 	def get(self, request, pk):
-# 		event = Event.objects.get(id=pk)
-# 		serializer = EventSerializer(event, many=False)
-# 		return Response(serializer.data)
+	def post(self, request, format=None):
+		serializer = EventSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# 	def post(self, request):
-# 		serializer = EventSerializer(data=request.data)
+	# def update(self, request, pk):
+	# 	event = Event.objects.get(pk=pk)
+	# 	serializer = EventSerializer(instance=event, data=request.data)
 
-# 		if serializer.is_valid():
-# 			serializer.save()
+	# 	if serializer.is_valid():
+	# 		serializer.save()
 
-# 		return Response(serializer.data)
+	# 	return Response(serializer.data)
 
-# 	def update(self, request, pk):
-# 		event = Event.objects.get(id=pk)
-# 		serializer = EventSerializer(instance=event, data=request.data)
+	# def delete(self, request, pk):
+	# 	event = Event.objects.get(pk=pk)
+	# 	event.delete()
+	# 	return Response('Evento excluído com sucesso!')
 
-# 		if serializer.is_valid():
-# 			serializer.save()
 
-# 		return Response(serializer.data)
+class EventDetail(APIView):
+	def get_by(self, pk):
+		try:
+			return Event.objects.get(pk=pk)
+		except:
+			raise Http404
 
-# 	def delete(request, pk):
-# 		event = Event.objects.get(id=pk)
-# 		event.delete()
-# 		return Response('Evento excluído com sucesso!')
+	def get(self, request, pk, format=None):
+		event = self.get_by(pk)
+		serializer = EventSerializer(event)
+		return Response(serializer.data)
+	
+	def put(self, request, pk, format=None):
+		event = self.get_by(pk)
+		serializer = EventSerializer(event, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+	def delete(self, request, pk, format=None):
+		event = self.get_by(pk)
+		event.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)

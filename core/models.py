@@ -37,6 +37,7 @@ class Category(models.Model):
 #     email = models.CharField(maxLength=160)
 #     password = modles.CharField(maxLength=16)
 #     star = models.IntegerField(size=5)
+#     created = models.DateTimeField(auto_now_add)
 
 
 # class Manager(User):
@@ -61,6 +62,7 @@ class Event(models.Model):
     capacity = models.IntegerField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to='images/')
     video_url = models.URLField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def search(self, query=None):
         return self.get_queryset().search(query=query)
