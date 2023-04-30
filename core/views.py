@@ -17,7 +17,7 @@ from rest_framework import status
 # 		return Response(overview)
 
 
-class Event(APIView):
+class EventList(APIView):
 	def get(self, request, format=None):
 		events = Event.objects.all()
 		serializer = EventSerializer(events, many=True)
@@ -30,14 +30,14 @@ class Event(APIView):
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	# def update(self, request, pk):
-	# 	event = Event.objects.get(pk=pk)
-	# 	serializer = EventSerializer(instance=event, data=request.data)
+	def update(self, request, pk):
+		event = Event.objects.get(pk=pk)
+		serializer = EventSerializer(instance=event, data=request.data)
 
-	# 	if serializer.is_valid():
-	# 		serializer.save()
+		if serializer.is_valid():
+			serializer.save()
 
-	# 	return Response(serializer.data)
+		return Response(serializer.data)
 
 	# def delete(self, request, pk):
 	# 	event = Event.objects.get(pk=pk)

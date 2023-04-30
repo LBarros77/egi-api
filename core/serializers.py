@@ -5,6 +5,7 @@ from .models import Event, Category
 class EventSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Event
+		# fields = ['name', 'start', 'finish', 'category', 'description', 'ticket', 'price', 'star', 'capacity', 'image', 'video_url']
 		fields = '__all__'
 		read_only_fields = ['id']
 
@@ -21,13 +22,13 @@ class EventSerializer(serializers.ModelSerializer):
 		instance.price = validated_data.get('price', instance.price)
 		instance.star = validated_data.get('star', instance.star)
 		instance.capacity = validated_data.get('capacity', instance.capacity)
-		instance.photo_url = validated_data.get('photo_url', instance.photo_url)
+		instance.image = validated_data.get('photo_url', instance.image)
 		instance.video_url = validated_data.get('video_url', instance.video_url)
 		instance.save()
 		return instance
 
-	def view_event(self):
-		return Events.objects.all()
+	# def view_event(self):
+	# 	return Events.objects.all()
 
 	# def valid_date(self, date):
     #     if date['start'] > date['finish']:
