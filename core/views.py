@@ -1,20 +1,20 @@
-from .models import Event
-from .serializers import EventSerializer
+from .models import Event, Category
+from .serializers import EventSerializer, CategorySerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-# class Overview(APIView):
-# 	def get(self, request):
-# 		overview = {
-# 			'Categorias': ['Cultura', 'Esportes', 'Lazer', 'Outros'],
-# 			'Promoções': [1, 2, 3, 4],
-# 			'Destaques': ['img1', 'img2', 'img3']
-# 		}
-
-# 		return Response(overview)
+class Overview(generics.ListAPIView):
+	queryset = Event.objects.all()
+	serializer_class = EventSerializer
+	filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+	filterset_fields = ['name', 'category']
+	ordering_fields = ['name']
+	search_fields = ['name']
 
 
 class EventList(APIView):
@@ -33,16 +33,14 @@ class EventList(APIView):
 	def update(self, request, pk):
 		event = Event.objects.get(pk=pk)
 		serializer = EventSerializer(instance=event, data=request.data)
-
 		if serializer.is_valid():
 			serializer.save()
-
 		return Response(serializer.data)
 
-	# def delete(self, request, pk):
-	# 	event = Event.objects.get(pk=pk)
-	# 	event.delete()
-	# 	return Response('Evento excluído com sucesso!')
+	def delete(self, request, pk):
+		event = Event.objects.get(pk=pk)
+		event.delete()
+		return Response('Evento excluído com sucesso!')
 
 
 class EventDetail(APIView):

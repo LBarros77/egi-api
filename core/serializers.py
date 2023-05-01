@@ -2,10 +2,18 @@ from rest_framework import serializers
 from .models import Event, Category
 
 
+class CategorySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Category
+		fields = ['id', 'name']
+		read_only_fields = ['id']
+
+
 class EventSerializer(serializers.ModelSerializer):
+	category = CategorySerializer()
+	
 	class Meta:
 		model = Event
-		# fields = ['name', 'start', 'finish', 'category', 'description', 'ticket', 'price', 'star', 'capacity', 'image', 'video_url']
 		fields = '__all__'
 		read_only_fields = ['id']
 
@@ -26,14 +34,6 @@ class EventSerializer(serializers.ModelSerializer):
 		instance.video_url = validated_data.get('video_url', instance.video_url)
 		instance.save()
 		return instance
-
-	# def view_event(self):
-	# 	return Events.objects.all()
-
-	# def valid_date(self, date):
-    #     if date['start'] > date['finish']:
-	#         raise serializers.ValidationError("finish must occur after start")
-    #     return date
 
 
 # class CommentSerializer(serializers.Serializer):
