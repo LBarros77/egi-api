@@ -1,11 +1,14 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import Event, Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
+	owner = serializers.ReadOnlyField(source='owner.username')
+	
 	class Meta:
 		model = Category
-		fields = ['id', 'name']
+		fields = ['id', 'name', 'image']
 		read_only_fields = ['id']
 
 
@@ -52,40 +55,40 @@ class EventSerializer(serializers.ModelSerializer):
 #         return instance
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     profile = ProfileSerializer()
+class UserSerializer(serializers.ModelSerializer):
+    events = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all())
 
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'profile']
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'events']
 
-#     def create(self, validated_data):
-#         profile_data = validated_data.pop('profile')
-#         user = User.objects.create(**validated_data)
-#         Profile.objects.create(user=user, **profile_data)
-#         return user
+    # def create(self, validated_data):
+    #     profile_data = validated_data.pop('profile')
+    #     user = User.objects.create(**validated_data)
+    #     Profile.objects.create(user=user, **profile_data)
+    #     return user
 
-#     def update(self, instance, validated_data):
-#         profile_data = validated_data.pop('profile')
-#         # Unless the application properly enforces that this field is
-#         # always set, the following could raise a `DoesNotExist`, which
-#         # would need to be handled.
-#         profile = instance.profile
+    # def update(self, instance, validated_data):
+    #     profile_data = validated_data.pop('profile')
+    #     # Unless the application properly enforces that this field is
+    #     # always set, the following could raise a `DoesNotExist`, which
+    #     # would need to be handled.
+    #     profile = instance.profile
 
-#         instance.username = validated_data.get('username', instance.username)
-#         instance.email = validated_data.get('email', instance.email)
-#         instance.save()
+    #     instance.username = validated_data.get('username', instance.username)
+    #     instance.email = validated_data.get('email', instance.email)
+    #     instance.save()
 
-#         profile.is_premium_member = profile_data.get(
-#             'is_premium_member',
-#             profile.is_premium_member
-#         )
-#         profile.has_support_contract = profile_data.get(
-#             'has_support_contract',
-#             profile.has_support_contract
-#          )
-#         profile.save()
+    #     profile.is_premium_member = profile_data.get(
+    #         'is_premium_member',
+    #         profile.is_premium_member
+    #     )
+    #     profile.has_support_contract = profile_data.get(
+    #         'has_support_contract',
+    #         profile.has_support_contract
+    #      )
+    #     profile.save()
 
-#         return instance
+    #     return instance
 
 

@@ -4,8 +4,6 @@ import uuid
 from datetime import datetime
 
 
-# User = settings.AUTH_USER_MODEL
-
 class Addrees(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=150)
@@ -22,6 +20,7 @@ class Addrees(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=150)
+    image = models.ImageField(null=True, blank=True, upload_to='images/categories')
 
     class Meta:
         ordering = ['name']
@@ -32,11 +31,13 @@ class Category(models.Model):
 
 
 # class User(models.Model):
-#     name = models.CharField(maxLength=120)
-#     cpf = models.CharField(maxLength=11)
-#     email = models.CharField(maxLength=160)
-#     password = modles.CharField(maxLength=16)
-#     star = models.IntegerField(size=5)
+#     name = models.CharField(max_length=120)
+#     cpf = models.CharField(max_length=11)
+#     email = models.EmailField(max_length=160)
+#     password = modles.CharField(max_length=16)
+#     image = models.ImageField(null=True, blank=True, upload_to='images/users')
+#     skills = models.CharField(null=True, blank=True)
+#     star = models.IntegerField(max_length=5)
 #     created = models.DateTimeField(auto_now_add)
 
 
@@ -50,8 +51,8 @@ class Category(models.Model):
 class Event(models.Model):
     addrees = models.ForeignKey(Addrees, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='events')
-    # manager = models.ManyToOneField(User, on_delete=models.PROTECT, related_name='events')
-    # colaborator = models.ForeignKey(User[], on_delete=models.SET_NULL)
+    manager = models.ManyToOneField(User, on_delete=models.PROTECT, related_name='events')
+    colaborator = models.ForeignKey(User[], on_delete=models.SET_NULL)
     name = models.CharField(max_length=120)
     start = models.DateTimeField()
     finish = models.DateTimeField()
@@ -60,7 +61,7 @@ class Event(models.Model):
     price = models.FloatField(default=0.00, null=True, blank=True)
     star = models.IntegerField(null=True, blank=True)
     capacity = models.IntegerField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True, upload_to='images/')
+    image = models.ImageField(null=True, blank=True, upload_to='images/events')
     video_url = models.URLField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 

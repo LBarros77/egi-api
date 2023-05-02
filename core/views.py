@@ -1,11 +1,12 @@
 from .models import Event, Category
-from .serializers import EventSerializer, CategorySerializer
+from .serializers import EventSerializer, CategorySerializer, UserSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth.models import User
 
 
 class Overview(generics.ListAPIView):
@@ -16,6 +17,16 @@ class Overview(generics.ListAPIView):
 	ordering_fields = ['name']
 	search_fields = ['name']
 
+
+class CategoryList(generics.ListAPIView);
+    queryset = Category.objects.all()
+    serializer_class = [permissions.IsAuthenticatedOrReadOnly] #CategorySerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['name']
+
+    def perform_create(self, serializer):
+		serializer.save(owner=self.request.user)
+    
 
 class EventList(APIView):
 	def get(self, request, format=None):
@@ -67,3 +78,13 @@ class EventDetail(APIView):
 		event = self.get_by(pk)
 		event.delete()
 		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UserList(generics.ListAPIView):
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+	queryset = User.objects.all()
+	serializer_class = UserSerializer
