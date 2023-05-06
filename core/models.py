@@ -51,7 +51,7 @@ class Category(models.Model):
 class Event(models.Model):
     addrees = models.ForeignKey(Addrees, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='events')
-    manager = models.ManyToOneField(User, on_delete=models.PROTECT, related_name='events')
+    manager = models.ManyToOneField('auth.User', on_delete=models.PROTECT, related_name='events')
     colaborator = models.ForeignKey(User[], on_delete=models.SET_NULL)
     name = models.CharField(max_length=120)
     start = models.DateTimeField()

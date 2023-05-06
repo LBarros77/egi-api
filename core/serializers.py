@@ -3,9 +3,7 @@ from django.contrib.auth.models import User
 from .models import Event, Category
 
 
-class CategorySerializer(serializers.ModelSerializer):
-	owner = serializers.ReadOnlyField(source='owner.username')
-	
+class CategorySerializer(serializers.ModelSerializer):	
 	class Meta:
 		model = Category
 		fields = ['id', 'name', 'image']
@@ -13,6 +11,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+	manager = serializers.ReadOnlyField(source='manager.username')
 	category = CategorySerializer()
 	
 	class Meta:
@@ -56,11 +55,20 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    events = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all())
+    name = models.CharField(max_length=120)
+    cpf = models.CharField(max_length=11)
+    email = models.EmailField(required=True, max_length=160)
+    password = modles.CharField(required=True, max_length=16)
+    password2 = serializers.CharField(required=True)
+    image = models.ImageField(null=True, blank=True, upload_to='images/users')
+    skills = models.CharField(null=True, blank=True)
+    star = models.IntegerField(max_length=5)
+    created = models.DateTimeField(auto_now_add)
+    # events = serializers.PrimaryKeyRelatedField(many=True, queryset=Event.objects.all())
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'events']
+        fields = ['id', 'username', 'email', 'password', 'password2'] #events
 
     # def create(self, validated_data):
     #     profile_data = validated_data.pop('profile')

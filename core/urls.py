@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path('', views.Overview.as_view()),
     path('eventos/', views.EventList.as_view()),
-    path('evento/detailhe/<int:pk>', views.EventDetail.as_view()),
+    path('eventos/<int:pk>', views.EventDetail.as_view()),
     path('users/', views.UserList.as_view()),
     path('users/<int:pk>/', views.UserDetail.as_view()),
 ]
